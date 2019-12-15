@@ -117,3 +117,9 @@
   branch = blackparrot_mods
   ignore = dirty
   update = none
+
+[submodule "external/HardFloat"]
+  path = external/HardFloat
+  url = https://github.com/bsg-external/HardFloat.git
+  branch = master
+  ignore = dirty
