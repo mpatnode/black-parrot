@@ -59,7 +59,7 @@ logic [dword_width_p-1:0]    rd_data_r;
 
 localparam rf_els_lp = 2**reg_addr_width_p;
 bsg_mem_2r1w_sync 
- #(.width_p(dword_width_p), .els_p(rf_els_lp))
+ #(.width_p(dword_width_p), .els_p(rf_els_lp), .read_write_same_addr_p(1))
  rf
   (.clk_i(clk_i)
    ,.reset_i(reset_i)
