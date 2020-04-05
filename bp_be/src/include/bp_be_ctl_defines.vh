@@ -69,9 +69,11 @@ typedef enum logic [4:0]
   ,e_op_fclass   = 5'b10001
   ,e_op_f2i      = 5'b10010
   ,e_op_f2iu     = 5'b10011
-  ,e_op_f2f      = 5'b11101
-  ,e_op_imvf     = 5'b11110
-  ,e_op_fmvi     = 5'b11111
+  ,e_op_f2f      = 5'b10100
+  ,e_op_imvf     = 5'b10101
+  ,e_op_fmvi     = 5'b10110
+  ,e_op_fdiv     = 5'b11110
+  ,e_op_fsqrt    = 5'b11111
 } bp_be_fp_fu_op_e;
 
 typedef enum logic [4:0]

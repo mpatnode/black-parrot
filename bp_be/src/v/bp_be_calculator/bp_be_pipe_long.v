@@ -122,8 +122,6 @@ module bp_be_pipe_long
   assign fp_wb_pkt.rd_addr = '0;
   assign fp_wb_pkt.rd_data = '0;
 
-
-
   // Actually a "busy" signal
   assign ready_o = idiv_ready_lo & ~v_i;
 

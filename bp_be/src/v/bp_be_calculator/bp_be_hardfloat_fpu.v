@@ -35,7 +35,6 @@ module bp_be_hardfloat_fpu
    // The IEEE rounding mode to use
    , input rv64_frm_e             rm_i
 
-
    , output logic [long_width_gp-1:0] o
    , output rv64_fflags_s             eflags_o
    );
