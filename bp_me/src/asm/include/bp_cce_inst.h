@@ -245,13 +245,11 @@ typedef enum {
   ,e_opd_owner_lce                       = 0x5 // MSHR.owner_lce_id
   ,e_opd_owner_way                       = 0x6 // MSHR.owner_way_id
   ,e_opd_next_coh_state                  = 0x7 // MSHR.next_coh_state
-  ,e_opd_flags                           = 0x8 // MSHR.flags
+  ,e_opd_flags                           = 0x8 // MSHR.flags & imm[0+:num_flags]
   ,e_opd_uc_req_size                     = 0x9 // MSHR.uc_req_size
   ,e_opd_data_length                     = 0xA // MSHR.data_length
   ,e_opd_lru_coh_state                   = 0xB // MSHR.lru_coh_state
-
-  // only used as a source
-  ,e_opd_flags_and_mask                  = 0xC // MSHR.flags & imm[0+:num_flags]
+  ,e_opd_owner_coh_state                 = 0xC // MSHR.owner_coh_state
 
   // sharers vectors require src_b to provide GPR rX containing index to use
   // These can only be used as source a, not as source b or destinations
@@ -385,6 +383,7 @@ typedef enum {
   ,e_mux_sel_coh_next_coh_state          = 0x8
   ,e_mux_sel_coh_lru_coh_state           = 0x9
   ,e_mux_sel_sharer_state                = 0xA // Sharer's vector states, indexed by src_a
+  ,e_mux_sel_coh_owner_coh_state         = 0x9
   ,e_mux_sel_coh_inst_imm                = 0xF
 } bp_cce_inst_mux_sel_coh_state_e;
 

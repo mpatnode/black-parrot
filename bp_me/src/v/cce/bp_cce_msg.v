@@ -783,14 +783,17 @@ module bp_cce_msg
                 lce_cmd.header.data_length = decoded_inst_i.data_length;
                 lce_cmd.data = {'0, src_a_i};
               end else begin
+                // TODO: support sending combo commands
                 lce_cmd.header.way_id = way_i;
+                // TODO: support st_wb command
                 if ((decoded_inst_i.lce_cmd == e_lce_cmd_st)
                     | (decoded_inst_i.lce_cmd == e_lce_cmd_st_wakeup)) begin
                   lce_cmd.header.state = coh_state_i;
                 end
                 // Transfer commands set target and target way fields
+                // TODO: support st_tr and st_tr_wb commands
                 if (decoded_inst_i.lce_cmd == e_lce_cmd_tr) begin
-                  lce_cmd.header.state = coh_state_i;
+                  lce_cmd.header.target_state = coh_state_i;
                   lce_cmd.header.target = mshr.lce_id;
                   lce_cmd.header.target_way_id = mshr.lru_way_id;
                 end
