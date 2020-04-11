@@ -1227,7 +1227,7 @@ module bp_cce_fsm
           lce_cmd.header.addr = mshr_r.paddr;
           lce_cmd.header.target = mshr_r.lce_id;
           lce_cmd.header.target_way_id = mshr_r.lru_way_id;
-          lce_cmd.header.state = mshr_r.next_coh_state;
+          lce_cmd.header.target_state = mshr_r.next_coh_state;
 
           state_n = (lce_cmd_ready_i) ? TRANSFER_WB_CMD : TRANSFER_CMD;
         end
