@@ -118,3 +118,6 @@
   branch = blackparrot_mods
   ignore = dirty
   update = none
+[submodule "bp_common/test/src/bp_tests"]
+	path = bp_common/test/src/bp_tests
+	url = https://github.com/black-parrot/bp_tests.git
