@@ -295,7 +295,7 @@ module bp_fe_lce_cmd
               tag_mem_pkt.way_id = lce_cmd_li.header.way_id[0+:way_id_width_lp];
               tag_mem_pkt.state  = lce_cmd_li.header.state;
               tag_mem_pkt.tag    = lce_cmd_addr_tag;
-              tag_mem_pkt.opcode = e_cache_tag_mem_set_tag;
+              tag_mem_pkt.opcode = e_cache_tag_mem_set_state;
               tag_mem_pkt_v    = lce_cmd_v_i;
             end
 
