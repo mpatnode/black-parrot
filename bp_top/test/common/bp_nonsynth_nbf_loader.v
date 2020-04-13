@@ -28,7 +28,7 @@ module bp_nonsynth_nbf_loader
 
   ,localparam max_nbf_index_lp = 2**20
   ,localparam nbf_index_width_lp = `BSG_SAFE_CLOG2(max_nbf_index_lp)
-  ,localparam lg_num_core_lp = `BSG_SAFE_CLOG2(num_core_p)
+  ,localparam lg_num_core_lp = `BSG_SAFE_CLOG2(num_core_p+1)
   )
 
   (input  clk_i
@@ -78,7 +78,7 @@ module bp_nonsynth_nbf_loader
   logic [lg_num_core_lp-1:0] core_cnt_r;
   wire core_done = (core_cnt_r == (num_core_p-1)) & io_cmd_yumi_i;
   bsg_counter_clear_up
-   #(.max_val_p(num_core_p-1)
+   #(.max_val_p(num_core_p)
      ,.init_val_p(0)
      )
    core_counter
