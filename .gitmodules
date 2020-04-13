@@ -105,9 +105,16 @@
   url = https://github.com/bsg-external/systemc.git
   branch = master
   ignore = dirty
+
 [submodule "external/sv2v"]
   path = external/sv2v
   url = https://github.com/zachjs/sv2v.git
   branch = master
   ignore = dirty
 
+[submodule "bp_common/test/src/spec/src/spec2000"]
+  path = bp_common/test/src/spec/src/spec2000
+  url = https://github.com/black-parrot/spec2000
+  branch = blackparrot_mods
+  ignore = dirty
+  update = none

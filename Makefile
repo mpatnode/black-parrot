@@ -12,16 +12,18 @@ include $(BP_EXTERNAL_DIR)/Makefile.tools
 
 .DEFAULT: prep
 
-prep_lite:
+## This is a small target which runs fast and allows folks to run hello world
+prep_lite: | $(TARGET_DIRS)
 	git submodule update --init
 	$(MAKE) libs
 	$(MAKE) verilator
 	$(MAKE) -j1 ucode
 
 ## This is the big target that just builds everything. Most users should just press this button
-prep:
+prep: | $(TARGET_DIRS)
 	git submodule update --init
-	$(MAKE) libs tools
+	$(MAKE) libs
+	$(MAKE) tools
 	$(MAKE) -j1 progs 
 	$(MAKE) -j1 ucode
 
@@ -36,6 +38,7 @@ tidy_tools:
 	cd $(TOP); git submodule deinit -f external/riscv-isa-sim
 	cd $(TOP); git submodule deinit -f external/axe
 	cd $(TOP); git submodule deinit -f external/cmurphi
+	cd $(TOP); git submodule deinit -f external/sv2v
 
 
 ## This target just wipes the whole repo clean.
@@ -58,7 +61,7 @@ libs: $(TARGET_DIRS)
 	$(MAKE) dramsim2
 	#$(MAKE) dramsim3
 
-tools: libs
+tools: | $(TARGET_DIRS)
 	$(MAKE) gnu
 	$(MAKE) verilator
 	$(MAKE) dromajo
@@ -72,6 +75,6 @@ progs: tools
 	git submodule update --init --recursive $(BP_COMMON_DIR)/test
 	$(MAKE) -C $(BP_COMMON_DIR)/test all_mem all_dump all_nbf
 
-ucode: tools
+ucode: | basejump
 	$(MAKE) -C $(BP_ME_DIR)/src/asm roms
 

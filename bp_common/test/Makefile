@@ -86,9 +86,6 @@ beebs_elf:
 	$(MAKE) -C $(TEST_DIR)/src/beebs/
 	find $(TEST_DIR)/src/beebs/src/ -type f -executable -execdir mv {} $(MEM_DIR)/{}.riscv \;
 
-spec_checkout:
-	$(MAKE) -C $(TEST_DIR)/src/spec/ checkout
-
 spec_elf:
 	$(MAKE) -C $(TEST_DIR)/src/spec/ CROSS_COMPILE=$(CROSS_COMPILE)
 	find $(TEST_DIR)/src/spec/ -executable -name "*.riscv" -type f -execdir mv {} $(MEM_DIR)/{} \;

@@ -25,8 +25,10 @@ module testbench
    , parameter cmt_trace_p                 = 0
    , parameter dram_trace_p                = 0
    , parameter npc_trace_p                 = 0
+   , parameter icache_trace_p              = 0
    , parameter dcache_trace_p              = 0
    , parameter vm_trace_p                  = 0
+   , parameter core_profile_p              = 0
    , parameter preload_mem_p               = 0
    , parameter load_nbf_p                  = 0
    , parameter skip_init_p                 = 0
@@ -141,7 +143,7 @@ bp_mem
    ,.reset_i(reset_i)
  
    ,.mem_cmd_i(proc_mem_cmd_lo)
-   ,.mem_cmd_v_i(proc_mem_cmd_v_lo & proc_mem_cmd_ready_li)
+   ,.mem_cmd_v_i(proc_mem_cmd_ready_li & proc_mem_cmd_v_lo)
    ,.mem_cmd_ready_o(proc_mem_cmd_ready_li)
  
    ,.mem_resp_o(proc_mem_resp_li)
@@ -154,12 +156,20 @@ logic nbf_done_lo, cfg_done_lo;
 if (load_nbf_p)
   begin : nbf
     bp_nonsynth_nbf_loader
+<<<<<<< HEAD
      #(.bp_params_p(bp_params_p), .skip_freeze_clear_p(1))
+=======
+     #(.bp_params_p(bp_params_p))
+>>>>>>> top_dev
      nbf_loader
       (.clk_i(clk_i)
        ,.reset_i(reset_i | ~cfg_done_lo)
     
+<<<<<<< HEAD
        ,.lce_id_i(4'b10)
+=======
+       ,.lce_id_i(lce_id_width_p'('b10))
+>>>>>>> top_dev
     
        ,.io_cmd_o(nbf_cmd_lo)
        ,.io_cmd_v_o(nbf_cmd_v_lo)
@@ -194,7 +204,11 @@ bp_cce_mmio_cfg_loader
   (.clk_i(clk_i)
    ,.reset_i(reset_i)
 
+<<<<<<< HEAD
    ,.lce_id_i(4'b10)
+=======
+   ,.lce_id_i(lce_id_width_p'('b10))
+>>>>>>> top_dev
     
    ,.io_cmd_o(cfg_cmd_lo)
    ,.io_cmd_v_o(cfg_cmd_v_lo)
@@ -363,28 +377,57 @@ bind bp_be_top
        ,.commit_pkt_i(commit_pkt)
        );
 
-  /*bind bp_be_dcache
-    bp_be_nonsynth_dcache_tracer
-     #(.bp_params_p(bp_params_p))
+  bind bp_be_dcache
+    bp_nonsynth_cache_tracer
+     #(.bp_params_p(bp_params_p)
+      ,.assoc_p(dcache_assoc_p)
+      ,.sets_p(dcache_sets_p)
+      ,.block_width_p(dcache_block_width_p)
+      ,.trace_file_p("dcache"))
      dcache_tracer
       (.clk_i(clk_i & (testbench.dcache_trace_p == 1))
        ,.reset_i(reset_i)
+<<<<<<< HEAD
        ,.freeze_i(be_checker.scheduler.int_regfile.cfg_bus.freeze)
+=======
+       ,.freeze_i(cfg_bus_cast_i.freeze)
+>>>>>>> top_dev
 
        ,.mhartid_i(cfg_bus_cast_i.core_id)
 
+       ,.v_tl_r(v_tl_r)
+       
        ,.v_tv_r(v_tv_r)
-       //,.cache_miss_i(cache_miss_i)
-
-       ,.paddr_tv_r(paddr_tv_r)
-       ,.uncached_tv_r(uncached_tv_r)
-       ,.load_op_tv_r(load_op_tv_r)
-       ,.store_op_tv_r(store_op_tv_r)
-       ,.lr_op_tv_r(lr_op_tv_r)
+       ,.addr_tv_r(paddr_tv_r)
+       ,.lr_miss_tv(lr_miss_tv)
        ,.sc_op_tv_r(sc_op_tv_r)
-       ,.store_data(data_tv_r)
+       ,.sc_success(sc_success)
+        
+       ,.cache_req_v_o(cache_req_v_o)
+       ,.cache_req_o(cache_req_o)
+
+       ,.cache_req_metadata_o(cache_req_metadata_o)
+       ,.cache_req_metadata_v_o(cache_req_metadata_v_o)
+        
+       ,.cache_req_complete_i(cache_req_complete_i)
+
+       ,.v_o(v_o)
        ,.load_data(data_o)
-       );*/
+       ,.cache_miss_o(dcache_miss_o)
+       ,.store_data(data_tv_r)
+
+       ,.data_mem_pkt_v_i(data_mem_pkt_v_i)
+       ,.data_mem_pkt_i(data_mem_pkt_i)
+       ,.data_mem_pkt_ready_o(data_mem_pkt_ready_o)
+       
+       ,.tag_mem_pkt_v_i(tag_mem_pkt_v_i)
+       ,.tag_mem_pkt_i(tag_mem_pkt_i)
+       ,.tag_mem_pkt_ready_o(tag_mem_pkt_ready_o)
+
+       ,.stat_mem_pkt_v_i(stat_mem_pkt_v_i)
+       ,.stat_mem_pkt_i(stat_mem_pkt_i)
+       ,.stat_mem_pkt_ready_o(stat_mem_pkt_ready_o)
+       );
 
   bind bp_be_top
     bp_be_nonsynth_calc_tracer
@@ -422,6 +465,54 @@ bind bp_be_top
        ,.mpp_i(be_mem.csr.mstatus_n.mpp)
        );
 
+  bind bp_fe_icache
+    bp_nonsynth_cache_tracer
+     #(.bp_params_p(bp_params_p)
+      ,.assoc_p(icache_assoc_p)
+      ,.sets_p(icache_sets_p)
+      ,.block_width_p(icache_block_width_p)
+      ,.trace_file_p("icache"))
+     dcache_tracer
+      (.clk_i(clk_i & (testbench.icache_trace_p == 1))
+       ,.reset_i(reset_i)
+       
+       ,.freeze_i(cfg_bus_cast_i.freeze)
+       ,.mhartid_i(cfg_bus_cast_i.core_id)
+
+       ,.v_tl_r(v_tl_r)
+       
+       ,.v_tv_r(v_tv_r)
+       ,.addr_tv_r(addr_tv_r)
+       ,.lr_miss_tv(1'b0)
+       ,.sc_op_tv_r(1'b0)
+       ,.sc_success(1'b0)
+        
+       ,.cache_req_v_o(cache_req_v_o)
+       ,.cache_req_o(cache_req_o)
+
+       ,.cache_req_metadata_o(cache_req_metadata_o)
+       ,.cache_req_metadata_v_o(cache_req_metadata_v_o)
+        
+       ,.cache_req_complete_i(cache_req_complete_i)
+
+       ,.v_o(data_v_o)
+       ,.load_data(dword_width_p'(data_o))
+       ,.cache_miss_o(miss_o)
+       ,.store_data(dword_width_p'(0))
+
+       ,.data_mem_pkt_v_i(data_mem_pkt_v_i)
+       ,.data_mem_pkt_i(data_mem_pkt_i)
+       ,.data_mem_pkt_ready_o(data_mem_pkt_ready_o)
+       
+       ,.tag_mem_pkt_v_i(tag_mem_pkt_v_i)
+       ,.tag_mem_pkt_i(tag_mem_pkt_i)
+       ,.tag_mem_pkt_ready_o(tag_mem_pkt_ready_o)
+
+       ,.stat_mem_pkt_v_i(stat_mem_pkt_v_i)
+       ,.stat_mem_pkt_i(stat_mem_pkt_i)
+       ,.stat_mem_pkt_ready_o(stat_mem_pkt_ready_o)
+       );
+
   bind bp_core_minimal
     bp_be_nonsynth_vm_tracer
     #(.bp_params_p(bp_params_p))
@@ -457,6 +548,70 @@ bind bp_be_top
      ,.mem_resp_v_i(proc_mem_resp_v_li)
      ,.mem_resp_yumi_i(proc_mem_resp_yumi_lo)
      );
+
+  bind bp_core_minimal
+    bp_nonsynth_core_profiler
+     #(.bp_params_p(bp_params_p))
+     core_profiler
+      (.clk_i(clk_i & (testbench.core_profile_p == 1))
+       ,.reset_i(reset_i)
+       ,.freeze_i(be.be_checker.scheduler.int_regfile.cfg_bus.freeze)
+
+       ,.mhartid_i(be.be_checker.scheduler.int_regfile.cfg_bus.core_id)
+
+       ,.fe_wait_stall(fe.pc_gen.is_wait)
+       ,.fe_queue_stall(~fe.pc_gen.fe_queue_ready_i)
+
+       ,.itlb_miss(fe.mem.itlb_miss_r)
+       ,.icache_miss(~fe.mem.icache.vaddr_ready_o | fe.pc_gen.icache_miss)
+       ,.icache_fence(fe.mem.icache.fencei_req)
+       ,.branch_override(fe.pc_gen.ovr_taken | fe.pc_gen.ovr_ntaken)
+
+       ,.fe_cmd(fe.pc_gen.fe_cmd_yumi_o & ~fe.pc_gen.attaboy_v)
+
+       ,.cmd_fence(be.be_checker.director.suppress_iss_o)
+
+       ,.target_mispredict(be.be_checker.scheduler.npc_mismatch & ~be.be_calculator.pipe_int.decode.br_v)
+       ,.dir_mispredict(be.be_checker.scheduler.npc_mismatch & be.be_calculator.pipe_int.decode.br_v)
+
+       ,.dtlb_miss(be.be_mem.dtlb_miss_r)
+       ,.dcache_miss(~be.be_mem.dcache.ready_o)
+       ,.long_haz(be.be_checker.detector.long_haz_v)
+       ,.exception(be.be_checker.director.trap_pkt.exception)
+       ,.eret(be.be_checker.director.trap_pkt.eret)
+       ,._interrupt(be.be_checker.director.trap_pkt._interrupt)
+       ,.control_haz(be.be_checker.detector.control_haz_v)
+       ,.data_haz(be.be_checker.detector.data_haz_v)
+       ,.load_dep((be.be_checker.detector.dep_status_li[0].mem_iwb_v
+                   | be.be_checker.detector.dep_status_li[1].mem_iwb_v
+                   ) & be.be_checker.detector.data_haz_v
+                  )
+       ,.mul_dep((be.be_checker.detector.dep_status_li[0].mul_iwb_v
+                  | be.be_checker.detector.dep_status_li[1].mul_iwb_v
+                  | be.be_checker.detector.dep_status_li[2].mul_iwb_v
+                  ) & be.be_checker.detector.data_haz_v
+                 )
+       ,.struct_haz(be.be_checker.detector.struct_haz_v)
+
+       ,.reservation(be.be_calculator.reservation_n)
+       ,.commit_pkt(be.be_calculator.commit_pkt)
+       ,.trap_pkt(be.be_mem.csr.trap_pkt_o)
+       );
+
+  bind bp_core_minimal
+    bp_nonsynth_pc_profiler
+     #(.bp_params_p(bp_params_p))
+     pc_profiler
+      (.clk_i(clk_i & (testbench.core_profile_p == 1))
+       ,.reset_i(reset_i)
+       ,.freeze_i(be.be_checker.scheduler.int_regfile.cfg_bus.freeze)
+
+       ,.mhartid_i(be.be_checker.scheduler.int_regfile.cfg_bus.core_id)
+
+       ,.commit_pkt(be.be_calculator.commit_pkt)
+
+       ,.program_finish_i(testbench.program_finish_lo)
+       );
 
 bp_nonsynth_if_verif
  #(.bp_params_p(bp_params_p))
