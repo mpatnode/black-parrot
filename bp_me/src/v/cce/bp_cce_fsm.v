@@ -606,8 +606,7 @@ module bp_cce_fsm
       end // speculative response
 
       // non-speculative memory access, forward directly to LCE
-      else if ((mem_resp.header.msg_type == e_cce_mem_rd)
-               | (mem_resp.header.msg_type == e_cce_mem_wr)) begin
+      else if (mem_resp.header.msg_type == e_cce_mem_rd) begin
 
         // handshaking
         lce_cmd_v_o = lce_cmd_ready_i & mem_resp_v_i;
@@ -682,7 +681,7 @@ module bp_cce_fsm
       // Dequeue memory writeback response, don't do anything with it
       // decrement pending bit
       // also set pending_busy to block FSM if needed
-      else if (mem_resp.header.msg_type == e_cce_mem_wb) begin
+      else if (mem_resp.header.msg_type == e_cce_mem_wr) begin
 
         mem_resp_yumi_o = mem_resp_v_i;
         pending_busy = mem_resp_yumi_o;
@@ -929,7 +928,7 @@ module bp_cce_fsm
         // writing the pending bit
         if (~pending_busy) begin
           mem_cmd_v_o = mem_cmd_ready_i;
-          mem_cmd.header.msg_type = (mshr_r.flags[e_opd_rqf]) ? e_cce_mem_wr : e_cce_mem_rd;
+          mem_cmd.header.msg_type = e_cce_mem_rd;
           mem_cmd.header.addr = (mshr_r.paddr >> lg_block_size_in_bytes_lp) << lg_block_size_in_bytes_lp;
           mem_cmd.header.size = e_mem_size_64;
           mem_cmd.header.payload.lce_id = mshr_r.lce_id;
@@ -1163,7 +1162,7 @@ module bp_cce_fsm
             mem_cmd_v_o = lce_resp_v_i & mem_cmd_ready_i;
             lce_resp_yumi_o = lce_resp_v_i & mem_cmd_ready_i;
 
-            mem_cmd.header.msg_type = e_cce_mem_wb;
+            mem_cmd.header.msg_type = e_cce_mem_wr;
             mem_cmd.header.addr = (lce_resp.header.addr >> lg_block_size_in_bytes_lp) << lg_block_size_in_bytes_lp;
             mem_cmd.header.payload.lce_id = mshr_r.lce_id;
             mem_cmd.header.payload.way_id = '0;
@@ -1260,7 +1259,7 @@ module bp_cce_fsm
             mem_cmd_v_o = lce_resp_v_i & mem_cmd_ready_i;
             lce_resp_yumi_o = lce_resp_v_i & mem_cmd_ready_i;
 
-            mem_cmd.header.msg_type = e_cce_mem_wb;
+            mem_cmd.header.msg_type = e_cce_mem_wr;
             mem_cmd.header.addr = (lce_resp.header.addr >> lg_block_size_in_bytes_lp) << lg_block_size_in_bytes_lp;
             mem_cmd.header.payload.lce_id = mshr_r.lce_id;
             mem_cmd.header.payload.way_id = '0;

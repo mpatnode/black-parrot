@@ -474,7 +474,7 @@ module bp_cce_msg
           end // uncached store response
 
           // Writeback response - clears the pending bit
-          else if (mem_resp.header.msg_type == e_cce_mem_wb) begin
+          else if (mem_resp.header.msg_type == e_cce_mem_wr) begin
             mem_resp_yumi_o = mem_resp_v_i;
             pending_w_v_o = mem_resp_v_i;
             pending_w_addr_o = mem_resp.header.addr;
@@ -558,8 +558,7 @@ module bp_cce_msg
           end // speculative memory response
 
           // Non-speculative Memory Response with cached data
-          else if ((mem_resp.header.msg_type == e_cce_mem_rd)
-                   | (mem_resp.header.msg_type == e_cce_mem_wr)) begin
+          else if (mem_resp.header.msg_type == e_cce_mem_rd) begin
 
             lce_cmd_v_o = lce_cmd_ready_i & mem_resp_v_i;
             mem_resp_yumi_o = lce_cmd_ready_i & mem_resp_v_i;
@@ -736,7 +735,7 @@ module bp_cce_msg
                   end
 
                   // Writeback command - override default command fields as needed
-                  if (decoded_inst_i.mem_cmd == e_cce_mem_wb) begin
+                  if (decoded_inst_i.mem_cmd == e_cce_mem_wr) begin
                     mem_cmd.data = lce_resp.data;
                     //mem_cmd.header.payload.lce_id = lce_resp.src_id;
                     mem_cmd.header.payload.lce_id = lce_i;

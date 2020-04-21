@@ -116,8 +116,7 @@ typedef enum {
   ,e_cce_mem_wr              = 1
   ,e_cce_mem_uc_rd           = 2
   ,e_cce_mem_uc_wr           = 3
-  ,e_cce_mem_wb              = 4
-  ,e_cce_mem_pre             = 5
+  ,e_cce_mem_pre             = 4
 } bp_cce_mem_cmd_type_e;
 
 #define bp_cce_mem_cmd_type_width 4

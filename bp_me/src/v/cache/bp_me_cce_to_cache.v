@@ -1,8 +1,6 @@
 /*
  * bp_me_cce_to_cache.v
  *
- * Paul Gao   10/2019
- *
  */
  
 `include "bp_me_cce_mem_if.vh"
@@ -187,7 +185,6 @@ module bp_me_cce_to_cache
         v_o = 1'b1;
         case (mem_cmd_lo.header.msg_type)
           e_cce_mem_rd
-          ,e_cce_mem_wr
           ,e_cce_mem_uc_rd:
             case (mem_cmd_lo.header.size)
               e_mem_size_1: cache_pkt.opcode = LB;
@@ -200,7 +197,7 @@ module bp_me_cce_to_cache
               default: cache_pkt.opcode = LB;
             endcase
           e_cce_mem_uc_wr
-          ,e_cce_mem_wb   :
+          ,e_cce_mem_wr   :
             case (mem_cmd_lo.header.size)
               e_mem_size_1: cache_pkt.opcode = SB;
               e_mem_size_2: cache_pkt.opcode = SH;
