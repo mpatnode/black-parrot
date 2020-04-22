@@ -169,13 +169,13 @@ module bp_me_cce_to_cache
         if (mem_cmd_v_lo)
           begin
             case (mem_cmd_lo.header.size)
-              e_mem_size_1
-              ,e_mem_size_2
-              ,e_mem_size_4
-              ,e_mem_size_8: cmd_max_count_n = '0;
-              e_mem_size_16: cmd_max_count_n = counter_width_lp'(1);
-              e_mem_size_32: cmd_max_count_n = counter_width_lp'(3);
-              e_mem_size_64: cmd_max_count_n = counter_width_lp'(7);
+              e_mem_msg_size_1
+              ,e_mem_msg_size_2
+              ,e_mem_msg_size_4
+              ,e_mem_msg_size_8: cmd_max_count_n = '0;
+              e_mem_msg_size_16: cmd_max_count_n = counter_width_lp'(1);
+              e_mem_msg_size_32: cmd_max_count_n = counter_width_lp'(3);
+              e_mem_msg_size_64: cmd_max_count_n = counter_width_lp'(7);
               default: cmd_max_count_n = '0;
             endcase
             cmd_state_n = SEND;
@@ -187,25 +187,25 @@ module bp_me_cce_to_cache
           e_cce_mem_rd
           ,e_cce_mem_uc_rd:
             case (mem_cmd_lo.header.size)
-              e_mem_size_1: cache_pkt.opcode = LB;
-              e_mem_size_2: cache_pkt.opcode = LH;
-              e_mem_size_4: cache_pkt.opcode = LW;
-              e_mem_size_8
-              ,e_mem_size_16
-              ,e_mem_size_32
-              ,e_mem_size_64: cache_pkt.opcode = LM;
+              e_mem_msg_size_1: cache_pkt.opcode = LB;
+              e_mem_msg_size_2: cache_pkt.opcode = LH;
+              e_mem_msg_size_4: cache_pkt.opcode = LW;
+              e_mem_msg_size_8
+              ,e_mem_msg_size_16
+              ,e_mem_msg_size_32
+              ,e_mem_msg_size_64: cache_pkt.opcode = LM;
               default: cache_pkt.opcode = LB;
             endcase
           e_cce_mem_uc_wr
           ,e_cce_mem_wr   :
             case (mem_cmd_lo.header.size)
-              e_mem_size_1: cache_pkt.opcode = SB;
-              e_mem_size_2: cache_pkt.opcode = SH;
-              e_mem_size_4: cache_pkt.opcode = SW;
-              e_mem_size_8
-              ,e_mem_size_16
-              ,e_mem_size_32
-              ,e_mem_size_64: cache_pkt.opcode = SM;
+              e_mem_msg_size_1: cache_pkt.opcode = SB;
+              e_mem_msg_size_2: cache_pkt.opcode = SH;
+              e_mem_msg_size_4: cache_pkt.opcode = SW;
+              e_mem_msg_size_8
+              ,e_mem_msg_size_16
+              ,e_mem_msg_size_32
+              ,e_mem_msg_size_64: cache_pkt.opcode = SM;
               default: cache_pkt.opcode = LB;
             endcase
           default: cache_pkt.opcode = LB;
@@ -296,13 +296,13 @@ module bp_me_cce_to_cache
         if (mem_cmd_v_lo)
           begin
             case (mem_cmd_lo.header.size)
-              e_mem_size_1
-              ,e_mem_size_2
-              ,e_mem_size_4
-              ,e_mem_size_8: resp_max_count_n = '0;
-              e_mem_size_16: resp_max_count_n = counter_width_lp'(1);
-              e_mem_size_32: resp_max_count_n = counter_width_lp'(3);
-              e_mem_size_64: resp_max_count_n = counter_width_lp'(7);
+              e_mem_msg_size_1
+              ,e_mem_msg_size_2
+              ,e_mem_msg_size_4
+              ,e_mem_msg_size_8: resp_max_count_n = '0;
+              e_mem_msg_size_16: resp_max_count_n = counter_width_lp'(1);
+              e_mem_msg_size_32: resp_max_count_n = counter_width_lp'(3);
+              e_mem_msg_size_64: resp_max_count_n = counter_width_lp'(7);
               default: resp_max_count_n = '0;
             endcase
             resp_state_n = RESP_RECEIVE;

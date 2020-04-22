@@ -194,7 +194,7 @@ module bp_cce_mmio_cfg_loader
       io_cmd_cast_o.header.addr          = local_addr_lo;
       io_cmd_cast_o.header.payload       = '0;
       io_cmd_cast_o.header.payload.lce_id = lce_id_i;
-      io_cmd_cast_o.header.size          = e_mem_size_8;
+      io_cmd_cast_o.header.size          = e_mem_msg_size_8;
       io_cmd_cast_o.data                 = cfg_data_lo;
     end
 

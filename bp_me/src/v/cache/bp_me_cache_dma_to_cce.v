@@ -178,7 +178,7 @@ module bp_me_cache_dma_to_cce
                                 {send_dma_pkt_r.addr[paddr_width_p-1:block_offset_width_lp],
                                 dma_pkt_rr_tag_r, send_dma_pkt_r.addr[block_offset_width_lp-1:0]};
   assign mem_cmd_lo.header.payload  = '0;
-  assign mem_cmd_lo.header.size     = e_mem_size_64;
+  assign mem_cmd_lo.header.size     = e_mem_msg_size_64;
   assign mem_cmd_lo.data     = (send_dma_pkt_r.write_not_read)? data_r : '0;
 
   assign mem_cmd_o           = mem_cmd_lo;

@@ -215,7 +215,7 @@ module bp_fe_lce_req
         // Zero out the byte offset bits so the address is 64-bit aligned.
         lce_req.header.addr = {miss_addr_r[paddr_width_p-1:byte_offset_width_lp]
                                , {byte_offset_width_lp{1'b0}}};
-        lce_req.header.uc_size = e_lce_uc_req_8;
+        lce_req.header.size = e_mem_msg_size_8;
         lce_req.data = '0;
 
         state_n = lce_req_v_o

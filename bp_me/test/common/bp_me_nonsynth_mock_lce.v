@@ -573,14 +573,14 @@ module bp_me_nonsynth_mock_lce
         lce_req.header.src_id = lce_id_i;
         lce_req.header.addr = mshr_r.paddr;
 
-        lce_req.header.uc_size =
+        lce_req.header.size =
           (double_op)
-          ? e_lce_uc_req_8
+          ? e_mem_msg_size_8
           : (word_op)
-            ? e_lce_uc_req_4
+            ? e_mem_msg_size_4
             : (half_op)
-              ? e_lce_uc_req_2
-              : e_lce_uc_req_1;
+              ? e_mem_msg_size_2
+              : e_mem_msg_size_1;
 
         lce_req.data = (mshr_r.store_op) ? cmd.data : '0;
 

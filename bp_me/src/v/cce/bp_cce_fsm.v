@@ -789,15 +789,7 @@ module bp_cce_fsm
 
           mem_cmd.header.addr = lce_req.header.addr;
           mem_cmd.header.payload.lce_id = lce_req.header.src_id;
-          mem_cmd.header.size =
-            (bp_lce_cce_uc_req_size_e'(lce_req.header.uc_size) == e_lce_uc_req_1)
-            ? e_mem_size_1
-            : (bp_lce_cce_uc_req_size_e'(lce_req.header.uc_size) == e_lce_uc_req_2)
-              ? e_mem_size_2
-              : (bp_lce_cce_uc_req_size_e'(lce_req.header.uc_size) == e_lce_uc_req_4)
-                ? e_mem_size_4
-                : e_mem_size_8
-            ;
+          mem_cmd.header.size = lce_req.header.size;
 
         end // send uncached request
       end // UNCACHED_ONLY
@@ -860,7 +852,7 @@ module bp_cce_fsm
                        | lce_req.header.msg_type == e_lce_req_type_uc_wr) begin
 
             mshr_n.paddr = lce_req.header.addr;
-            mshr_n.uc_req_size = lce_req.header.uc_size;
+            mshr_n.msg_size = lce_req.header.size;
             mshr_n.flags[e_opd_ucf] = 1'b1;
             mshr_n.flags[e_opd_rqf] = (lce_req.header.msg_type == e_lce_req_type_uc_wr);
 
@@ -884,15 +876,7 @@ module bp_cce_fsm
 
           mem_cmd.header.addr = mshr_r.paddr;
           mem_cmd.header.payload.lce_id = mshr_r.lce_id;
-          mem_cmd.header.size =
-            (bp_lce_cce_uc_req_size_e'(mshr_r.uc_req_size) == e_lce_uc_req_1)
-            ? e_mem_size_1
-            : (bp_lce_cce_uc_req_size_e'(mshr_r.uc_req_size) == e_lce_uc_req_2)
-              ? e_mem_size_2
-              : (bp_lce_cce_uc_req_size_e'(mshr_r.uc_req_size) == e_lce_uc_req_4)
-                ? e_mem_size_4
-                : e_mem_size_8
-            ;
+          mem_cmd.header.size = lce_req.header.size;
 
           lce_req_yumi_o = lce_req_v_i & mem_cmd_ready_i;
 
@@ -930,7 +914,7 @@ module bp_cce_fsm
           mem_cmd_v_o = mem_cmd_ready_i;
           mem_cmd.header.msg_type = e_cce_mem_rd;
           mem_cmd.header.addr = (mshr_r.paddr >> lg_block_size_in_bytes_lp) << lg_block_size_in_bytes_lp;
-          mem_cmd.header.size = e_mem_size_64;
+          mem_cmd.header.size = e_mem_msg_size_64;
           mem_cmd.header.payload.lce_id = mshr_r.lce_id;
           mem_cmd.header.payload.way_id = mshr_r.lru_way_id;
           // speculatively issue request for E state
@@ -1167,7 +1151,7 @@ module bp_cce_fsm
             mem_cmd.header.payload.lce_id = mshr_r.lce_id;
             mem_cmd.header.payload.way_id = '0;
             mem_cmd.data = lce_resp.data;
-            mem_cmd.header.size = e_mem_size_64;
+            mem_cmd.header.size = e_mem_msg_size_64;
 
             state_n = (lce_resp_yumi_o)
                       ? (transfer_flag)
@@ -1264,7 +1248,7 @@ module bp_cce_fsm
             mem_cmd.header.payload.lce_id = mshr_r.lce_id;
             mem_cmd.header.payload.way_id = '0;
             mem_cmd.data = lce_resp.data;
-            mem_cmd.header.size = e_mem_size_64;
+            mem_cmd.header.size = e_mem_msg_size_64;
 
             state_n = (lce_resp_yumi_o) ? RESOLVE_SPECULATION : TRANSFER_WB_RESP;
 

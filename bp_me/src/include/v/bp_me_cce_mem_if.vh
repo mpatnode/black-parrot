@@ -9,6 +9,7 @@
 `define BP_ME_CCE_MEM_IF_VH
 
 `include "bsg_defines.v"
+`include "bp_common_me_if.vh"
 
 /*
  *
@@ -39,18 +40,6 @@ typedef enum logic [3:0]
   ,e_cce_mem_pre     = 4'b0100  // Pre-fetch block request from CCE, fill into L2/LLC if able
   // 4'b0101 - 4'b1111 reserved // custom
 } bp_cce_mem_cmd_type_e;
-
-typedef enum logic [2:0]
-{
-  e_mem_size_1     = 3'b000  // 1 byte
-  ,e_mem_size_2    = 3'b001  // 2 bytes
-  ,e_mem_size_4    = 3'b010  // 4 bytes
-  ,e_mem_size_8    = 3'b011  // 8 bytes
-  ,e_mem_size_16   = 3'b100  // 16 bytes
-  ,e_mem_size_32   = 3'b101  // 32 bytes
-  ,e_mem_size_64   = 3'b110  // 64 bytes
-  // 3'b111 reserved / custom
-} bp_cce_mem_req_size_e;
 
 /*
  *
@@ -96,7 +85,7 @@ typedef enum logic [2:0]
   typedef struct packed                                         \
   {                                                             \
     bp_cce_mem_msg_payload_s                     payload;       \
-    bp_cce_mem_req_size_e                        size;          \
+    bp_mem_msg_size_e                            size;          \
     logic [addr_width_mp-1:0]                    addr;          \
     bp_cce_mem_cmd_type_e                        msg_type;      \
   } bp_cce_mem_msg_header_s;                                    \
@@ -118,7 +107,7 @@ typedef enum logic [2:0]
 `define bp_cce_mem_msg_header_width(addr_width_mp, lce_id_width_mp, lce_assoc_mp) \
   ($bits(bp_cce_mem_cmd_type_e)+addr_width_mp \
    +`bp_cce_mem_msg_payload_width(lce_id_width_mp, lce_assoc_mp)\
-   +$bits(bp_cce_mem_req_size_e))
+   +$bits(bp_mem_msg_size_e))
 
 `define bp_cce_mem_msg_width(addr_width_mp, data_width_mp, lce_id_width_mp, lce_assoc_mp) \
   (`bp_cce_mem_msg_header_width(addr_width_mp,lce_id_width_mp,lce_assoc_mp)+data_width_mp)

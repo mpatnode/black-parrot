@@ -133,7 +133,7 @@ module bp_be_dcache_lce_req
 
   logic load_not_store_r, load_not_store_n;
   logic [paddr_width_p-1:0] miss_addr_r, miss_addr_n;
-  logic [1:0] size_op_r, size_op_n;
+  bp_cache_req_size_e size_op_r, size_op_n;
 
   logic cce_data_received_r, cce_data_received_n, cce_data_received;
 
@@ -210,7 +210,7 @@ module bp_be_dcache_lce_req
         end
         else if (cache_req_cast_li.msg_type == e_uc_load) begin
           miss_addr_n = cache_req_cast_li.addr;
-          size_op_n = bp_lce_cce_uc_req_size_e'(cache_req_cast_li.size);
+          size_op_n = cache_req_cast_li.size;
           cce_data_received_n = 1'b0;
  
           state_n = e_SEND_UNCACHED_LOAD_REQ;
@@ -219,7 +219,7 @@ module bp_be_dcache_lce_req
           lce_req_v_o = lce_req_ready_i;
 
           lce_req.data = cache_req_cast_li.data[dword_width_p-1:0];;
-          lce_req.header.uc_size = bp_lce_cce_uc_req_size_e'(cache_req_cast_li.size);
+          lce_req.header.size = bp_mem_msg_size_e'(cache_req_cast_li.size);
           lce_req.header.addr = cache_req_cast_li.addr;
           lce_req.header.msg_type = e_lce_req_type_uc_wr;
           lce_req.header.src_id = lce_id_i;
@@ -258,7 +258,7 @@ module bp_be_dcache_lce_req
         lce_req_v_o = lce_req_ready_i & cache_req_metadata_v_r;
 
         lce_req.data = '0;
-        lce_req.header.uc_size = bp_lce_cce_uc_req_size_e'(size_op_r);
+        lce_req.header.size = bp_mem_msg_size_e'(size_op_r);
         lce_req.header.addr = miss_addr_r;
         lce_req.header.msg_type = e_lce_req_type_uc_rd;
         lce_req.header.src_id = lce_id_i;
